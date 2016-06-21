@@ -5,7 +5,7 @@
     <string name="action_refresh">Actualizar</string>
     <string name="title_activity_detail">Detalle Actividad</string>
     <string name="sendMQTT">Enviar MQTT</string>
-    <string name="mqtt_publish">Publicar</string>
+    <string name="mqtt_publish">Control Invernadero</string>
     <string name="mqtt_client">MQTT Cliente</string>
     <string name="mqtt_connect">Conectar al Broker</string>
     <string name="aboutpatterns">Acerca de Greenhouse IoT</string>

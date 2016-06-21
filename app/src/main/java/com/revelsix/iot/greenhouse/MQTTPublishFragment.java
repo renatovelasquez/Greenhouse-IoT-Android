@@ -14,24 +14,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Switch;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MQTTPublishFragment extends Fragment {
 
-    public String                       topicToPublish;
-    public String                       textToPublish;
-    public String                       qos;
+    public String valueCooler;
+    public String valueLight;
+    public String valueWater;
 
-    public EditText                     textPublish;
-    public EditText                     textPublishTopic;
-    public EditText                     textPublishQoS;
+    public Switch swCooler;
+    public Switch swLight;
+    public Switch swWater;
 
-    public FloatingActionButton         fabPublishTotopics;
-    public FloatingActionButton         fabConnect;
-    public FloatingActionButton         fabSubscribe;
+    public FloatingActionButton fabConnect;
+    public FloatingActionButton fabSubscribe;
 
     public PublishDataPassListener      mCallback;
 
@@ -73,7 +72,6 @@ public class MQTTPublishFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
-
         setHasOptionsMenu(true);
     }
 
@@ -109,7 +107,6 @@ public class MQTTPublishFragment extends Fragment {
             });
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -118,21 +115,22 @@ public class MQTTPublishFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_publish, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_control, container, false);
 
         // Initialise all necessary Views, their values and onClickListener's
-        fabPublishTotopics  = (FloatingActionButton) rootView.findViewById(R.id.fabPublishToTopic);
-        fabConnect          = (FloatingActionButton) rootView.findViewById(R.id.fabConnect);
-        fabSubscribe        = (FloatingActionButton) rootView.findViewById(R.id.fabSubscribe);
+        swCooler = (Switch) rootView.findViewById(R.id.switchCooler);
+        swLight = (Switch) rootView.findViewById(R.id.switchLight);
+        swWater = (Switch) rootView.findViewById(R.id.switchWater);
 
-        textPublishTopic    = (EditText)             rootView.findViewById(R.id.editTextPublishTopic);
-        textPublish         = (EditText)             rootView.findViewById(R.id.editTextPublish);
-        textPublishQoS      = (EditText)             rootView.findViewById(R.id.editTextQoS);
+        swCooler.setOnClickListener(onClickListener);
+        swLight.setOnClickListener(onClickListener);
+        swWater.setOnClickListener(onClickListener);
 
-        fabPublishTotopics  .setOnClickListener(onClickListenerMQTT);
-        fabConnect          .setOnClickListener(onClickListenerMQTT);
-        fabSubscribe        .setOnClickListener(onClickListenerMQTT);
+        fabConnect = (FloatingActionButton) rootView.findViewById(R.id.fabConnect);
+        fabSubscribe = (FloatingActionButton) rootView.findViewById(R.id.fabSubscribe);
 
+        fabConnect.setOnClickListener(onClickListenerMQTT);
+        fabSubscribe.setOnClickListener(onClickListenerMQTT);
         return rootView;
     }
 
@@ -143,16 +141,45 @@ public class MQTTPublishFragment extends Fragment {
     */
     @Override
     public void onStart(){
-
         super.onStart();
         Bundle args = getArguments();
         if (args != null) {
-
-            textPublishTopic.setText(args.getString("topic"));
-            textPublish     .setText(args.getString("text"));
-            textPublishQoS  .setText(Integer.toString(args.getInt("qos")));
+//            textPublishTopic.setText(args.getString("topic"));
+//            textPublish.setText(args.getString("text"));
+//            textPublishQoS.setText(Integer.toString(args.getInt("qos")));
         }
     }
+
+    private OnClickListener onClickListener = new OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            switch(v.getId()){
+                case R.id.switchCooler:
+                    //Handle the Button to publish the message
+                    valueCooler = swCooler.isChecked()?"1":"0";
+                    // Bundle the parameters, and call the parent Activity method to start the connection
+                    String paramsCooler[] = {"publish", valueCooler,"cooler","0"};
+                    mCallback.publishMQTTmessage(paramsCooler);
+                    break;
+
+                case R.id.switchLight:
+                    //Handle the Button to publish the message
+                    valueLight = swCooler.isChecked()?"1":"0";
+                    // Bundle the parameters, and call the parent Activity method to start the connection
+                    String paramsLight[] = {"publish", valueLight,"light","0"};
+                    mCallback.publishMQTTmessage(paramsLight);
+                    break;
+
+                case R.id.switchWater:
+                    //Handle the Button to publish the message
+                    valueWater = swCooler.isChecked()?"1":"0";
+                    // Bundle the parameters, and call the parent Activity method to start the connection
+                    String paramsWater[] = {"publish", valueWater,"water","0"};
+                    mCallback.publishMQTTmessage(paramsWater);
+                    break;
+            }
+        }
+    };
 
     // onClickListener for all Views. The action if filtered by the name of the View
     private OnClickListener onClickListenerMQTT = new OnClickListener() {
@@ -160,18 +187,6 @@ public class MQTTPublishFragment extends Fragment {
         public void onClick(final View v) {
 
             switch(v.getId()){
-
-                case R.id.fabPublishToTopic:
-                    //Handle the Button to publish the message
-                    textToPublish   = textPublish       .getText().toString();
-                    topicToPublish  = textPublishTopic  .getText().toString();
-                    qos             = textPublishQoS    .getText().toString();
-
-                    // Bundle the parameters, and call the parent Activity method to start the connection
-                    String connectParams[] = {"publish", textToPublish,topicToPublish,qos};
-                    mCallback.publishMQTTmessage(connectParams);
-
-                    break;
 
                 case R.id.fabConnect:
                     // Change to the Connect fragment, through the parent Activity interface
