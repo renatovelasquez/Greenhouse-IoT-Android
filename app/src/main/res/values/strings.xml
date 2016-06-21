@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Greenhouse IoT</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_about">Acerca de</string>
+    <string name="action_refresh">Actualizar</string>
+    <string name="title_activity_detail">Detalle Actividad</string>
+    <string name="sendMQTT">Enviar MQTT</string>
+    <string name="mqtt_publish">Publicar</string>
+    <string name="mqtt_client">MQTT Cliente</string>
+    <string name="mqtt_connect">Conectar al Broker</string>
+    <string name="aboutpatterns">Acerca de Greenhouse IoT</string>
+    <string name="mqtt_subscribe">Suscribirse a Tópico</string>
+    <string name="description">MQTT Patterns. This application provides a simple implementation of an MQTT client capable of one connection at the time, publishing and multiple subscriptions to any given topic. \n \n
+        It supports only a single CA file for SSL/TLS as of this version, however, work is in progress to add a client private key and certificate.</string>
+
+    <string name="aboutText">
+        Greenhouse IoT v.1.0\n
+        por @RenatoVelasquez\n
+        velasquez.ren@gmail.com\n
+        Junio 2016
+    </string>
+</resources>
