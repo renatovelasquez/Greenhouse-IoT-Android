@@ -6,37 +6,30 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import android.widget.TextView;
 
 public class MQTTSubscribeFragment extends Fragment {
 
-    public String                       topicToSubscribe;
-    public String                       messages[] = {"","","","",""};
+    public FloatingActionButton fabConnect;
+    public FloatingActionButton fabLaunchPublish;
 
-    private ArrayAdapter<String>        messagesAdapter;
+    public SubscribeDataPassListener mCallback;
 
-    public EditText                     topicSubscribe;
+    Sensor temperature = new Sensor();
+    Sensor soil = new Sensor();
+    Sensor soilMoisture = new Sensor();
 
-    public FloatingActionButton         fabSubscribeTotopic;
-    public FloatingActionButton         fabConnect;
-    public FloatingActionButton         fabLaunchPublish;
-
-    public ListView                     listViewMessages;
-
-    public SubscribeDataPassListener    mCallback;
+    public TextView txtValueTemp;
+    public TextView txtValueSoil;
+    public TextView txtValueMois;
 
     public MQTTSubscribeFragment() {
         // Required empty public constructor
@@ -45,7 +38,9 @@ public class MQTTSubscribeFragment extends Fragment {
     // Interface of the functions from the parent Activity that this Fragment will call
     public interface SubscribeDataPassListener {
         void launchPublishFragment(String data);
+
         void launchConnectFragment(String data);
+
         void subscribeMQTTtopic(String messageParams[]);
     }
 
@@ -57,8 +52,8 @@ public class MQTTSubscribeFragment extends Fragment {
 
         // An Activity is needed to create the interface callback, so it is cast from the context
         // This is due to the onAttach method with Activity instead of context has ben deprecated
-        if (context instanceof Activity){
-            activity=(Activity) context;
+        if (context instanceof Activity) {
+            activity = (Activity) context;
 
             // This makes sure that the container activity has implemented
             // the callback interface. If not, it throws an exception
@@ -73,14 +68,14 @@ public class MQTTSubscribeFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         //inflater.inflate(R.menu.devicefragment, menu);
     }
@@ -121,37 +116,17 @@ public class MQTTSubscribeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_mqttsubscribe, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_monitor, container, false);
 
         // Initialise all necessary Views, their values and onClickListener's
-        fabSubscribeTotopic = (FloatingActionButton) rootView.findViewById(R.id.fabSubscribeToTopic);
-        fabConnect          = (FloatingActionButton) rootView.findViewById(R.id.fabConnect);
-        fabLaunchPublish    = (FloatingActionButton) rootView.findViewById(R.id.fabPublish);
+        fabConnect = (FloatingActionButton) rootView.findViewById(R.id.fabConnect);
+        fabLaunchPublish = (FloatingActionButton) rootView.findViewById(R.id.fabPublish);
+        txtValueTemp = (TextView) rootView.findViewById(R.id.txtValueTemp);
+        txtValueSoil = (TextView) rootView.findViewById(R.id.txtValueSoil);
+        txtValueMois = (TextView) rootView.findViewById(R.id.txtValueMois);
 
-        topicSubscribe      = (EditText)             rootView.findViewById(R.id.editTextSubscribeTopic);
-
-        fabSubscribeTotopic .setOnClickListener(onClickListenerMQTT);
-        fabConnect          .setOnClickListener(onClickListenerMQTT);
-        fabLaunchPublish    .setOnClickListener(onClickListenerMQTT);
-
-        // This list adapter is displayed in the ListView and it holds the incoming messages
-        List<String> MQTTmessages = new ArrayList<String>(Arrays.asList(messages));
-
-        messagesAdapter = new ArrayAdapter<String>(
-                // The current context (this fragment's parent activity)
-                getActivity(),
-                // ID of list item layout xml
-                R.layout.list_item,
-                // ID of textView to populate
-                R.id.device_item,
-                // Data to populate with
-                MQTTmessages);
-
-        // Find the listView by its ID
-        listViewMessages = (ListView) rootView.findViewById(R.id.listViewMessages);
-
-        // Bind the adapter to the List View
-        listViewMessages.setAdapter(messagesAdapter);
+        fabConnect.setOnClickListener(onClickListenerMQTT);
+        fabLaunchPublish.setOnClickListener(onClickListenerMQTT);
 
         return rootView;
     }
@@ -162,23 +137,45 @@ public class MQTTSubscribeFragment extends Fragment {
     to have consistency in the UI values and update them as needed
     */
     @Override
-    public void onStart(){
+    public void onStart() {
 
         super.onStart();
         Bundle args = getArguments();
         if (args != null) {
-
-            //textBroker.setText(args.getString(puerto));
-            topicSubscribe.setText(args.getString("topic"));
-
-            messages = args.getStringArray("messages");
-            if (messages != null) {
-                messagesAdapter.clear();
-                messagesAdapter.addAll(messages);
-                // Bind the adapter to the List View
-                listViewMessages.setAdapter(messagesAdapter);
-            }
+//            //textBroker.setText(args.getString(puerto));
+//            topicSubscribe.setText(args.getString("topic"));
+//
+//            messages = args.getStringArray("messages");
+//            if (messages != null) {
+//                messagesAdapter.clear();
+//                messagesAdapter.addAll(messages);
+//                // Bind the adapter to the List View
+//                listViewMessages.setAdapter(messagesAdapter);
+//            }
         }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        String paramsTemperature[] = {"subscribe", "1"};
+        mCallback.subscribeMQTTtopic(paramsTemperature);
+        String paramsSoil[] = {"subscribe", "2"};
+        mCallback.subscribeMQTTtopic(paramsSoil);
+        String paramsSoilMoisture[] = {"subscribe", "3"};
+        mCallback.subscribeMQTTtopic(paramsSoilMoisture);
+
+        temperature.setIdSensor(1);
+        temperature.setSensor("Temperatura");
+        temperature.setValue("0°C");
+
+        soil.setIdSensor(2);
+        soil.setSensor("Humedad");
+        soil.setValue("0%");
+
+        soilMoisture.setIdSensor(3);
+        soilMoisture.setSensor("Humedad de suelo");
+        soilMoisture.setValue("0%");
     }
 
     // onClickListener for all Views. The action if filtered by the name of the View
@@ -186,16 +183,7 @@ public class MQTTSubscribeFragment extends Fragment {
         @Override
         public void onClick(final View v) {
 
-            switch(v.getId()){
-
-                case R.id.fabSubscribeToTopic:
-                    // Handle the Button to subscribe to a topic
-                    topicToSubscribe= topicSubscribe .getText().toString();
-
-                    // Bundle the parameters, and call the parent Activity method to start the connection
-                    String connectParams[] = {"subscribe", topicToSubscribe};
-                    mCallback.subscribeMQTTtopic(connectParams);
-                    break;
+            switch (v.getId()) {
 
                 case R.id.fabPublish:
                     //// Change to the Publish fragment, through the parent Activity interface
@@ -212,12 +200,26 @@ public class MQTTSubscribeFragment extends Fragment {
 
     // This method is called from the parent Activity and it has to run in the UI thread, to update
     // the itesm in the ListView
-    public void updateList(String messages[]){
-
-        messagesAdapter.clear();
-        messagesAdapter.addAll(messages);
-
+    public void updateList(String message, String topic) {
         // Bind the adapter to the List View
-        listViewMessages.setAdapter(messagesAdapter);
+        Log.i(topic, message);
+        switch (topic) {
+
+            case "1":
+                //// Change to the Publish fragment, through the parent Activity interface
+                Log.i("Temperatura", message);
+                txtValueTemp.setText(message+"°C");
+                break;
+            case "2":
+                //// Change to the Publish fragment, through the parent Activity interface
+                Log.i("Humedad", message);
+                txtValueSoil.setText(message+"%");
+                break;
+            case "3":
+                //// Change to the Publish fragment, through the parent Activity interface
+                Log.i("Humedad Suelo", message);
+                txtValueMois.setText(message+"%");
+                break;
+        }
     }
 }

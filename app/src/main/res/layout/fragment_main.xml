@@ -40,7 +40,8 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/description"
                     android:layout_span="1"
-                    android:id="@+id/textView" />
+                    android:id="@+id/textView"
+                    android:layout_marginTop="20dp"/>
 
             </GridLayout>
 

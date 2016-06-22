@@ -87,7 +87,7 @@
                         android:layout_weight="3"
                         android:layout_height="match_parent"
                         android:layout_marginTop="10dp"
-                        android:text="198.162.0.11"
+                        android:text="198.162.1.20"
                         android:gravity="center_vertical"
                         android:textSize="15dp"/>
 
@@ -111,7 +111,7 @@
                         android:layout_height="match_parent"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:gravity="center_vertical"
-                        android:text="Port"
+                        android:text="Puerto"
                         android:id="@+id/textViewPort" />
 
                     <EditText
@@ -144,7 +144,7 @@
                         android:layout_height="match_parent"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:gravity="center_vertical"
-                        android:text="Client ID"
+                        android:text="Servicio"
                         android:id="@+id/textViewClient" />
 
                     <EditText
@@ -154,7 +154,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="10dp"
                         android:gravity="center_vertical"
-                        android:text="Sample Client"
+                        android:text="Invernadero"
                         android:textSize="15dp" />
 
                 </LinearLayout>
@@ -176,6 +176,7 @@
                         android:layout_weight="3"
                         android:layout_height="match_parent"
                         android:layout_marginTop="27dp"
+                        android:visibility="invisible"
                         android:textSize="7pt"
                         android:text="Normal"
                         android:textColor="#888888"
@@ -184,6 +185,7 @@
                     <RadioButton
                         android:id="@+id/radioTLS"
                         android:layout_width="0dp"
+                        android:visibility="invisible"
                         android:layout_weight="3"
                         android:layout_height="match_parent"
                         android:layout_marginTop="27dp"
@@ -191,7 +193,6 @@
                         android:text="SSL/TLS(not implemente)"
                         android:textColor="#888888"
                         android:gravity="center_vertical"/>
-
                 </LinearLayout>
 
             </TableRow>
@@ -208,7 +209,6 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="end|bottom"
         android:src="@drawable/done_white"
-
         />
 
 </android.support.design.widget.CoordinatorLayout>

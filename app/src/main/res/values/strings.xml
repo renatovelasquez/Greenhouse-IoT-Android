@@ -1,18 +1,17 @@
 <resources>
     <string name="app_name">Greenhouse IoT</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Propiedades</string>
     <string name="action_about">Acerca de</string>
     <string name="action_refresh">Actualizar</string>
     <string name="title_activity_detail">Detalle Actividad</string>
     <string name="sendMQTT">Enviar MQTT</string>
     <string name="mqtt_publish">Control Invernadero</string>
     <string name="mqtt_client">MQTT Cliente</string>
-    <string name="mqtt_connect">Conectar al Broker</string>
+    <string name="mqtt_connect">Configuración</string>
     <string name="aboutpatterns">Acerca de Greenhouse IoT</string>
-    <string name="mqtt_subscribe">Suscribirse a Tópico</string>
-    <string name="description">MQTT Patterns. This application provides a simple implementation of an MQTT client capable of one connection at the time, publishing and multiple subscriptions to any given topic. \n \n
-        It supports only a single CA file for SSL/TLS as of this version, however, work is in progress to add a client private key and certificate.</string>
-
+    <string name="mqtt_subscribe">Monitoreo Invernadero</string>
+    <string name="description">La aplicación \"Greenhouse IoT\", permite una experiencia simple para el control y monitoreo de un invernadero.\n\nEsta aplicación fue desarrollada como apoyo al prototipo del trabajo de investigación titulado \"Diseño de un sistema embebido para el control de un invernadero\" realizada por Renato Velasquez Luis.
+    </string>
     <string name="aboutText">
         Greenhouse IoT v.1.0\n
         por @RenatoVelasquez\n

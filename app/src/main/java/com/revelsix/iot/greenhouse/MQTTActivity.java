@@ -38,7 +38,6 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
     public String                   broker;
     public String                   port;
     public String                   clientId;
-    public String                   messages[] = {"","","","",""};
     public String                   brokerURI;
 
     public int                      qos = 0;
@@ -159,12 +158,12 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
         // Create instance of MQTTSubscribeFragment
         subscribeFragment  = new MQTTSubscribeFragment();
 
-        Bundle args = new Bundle();
-
-        // Pass information from the variables in the activity to the fragment
-        args.putString("topic", topicToSubscribe);
-        args.putStringArray("messages", messages);
-        subscribeFragment.setArguments(args);
+//        Bundle args = new Bundle();
+//
+//        // Pass information from the variables in the activity to the fragment
+//        args.putString("topic", topicToSubscribe);
+//        args.putStringArray("messages", messages);
+//        subscribeFragment.setArguments(args);
 
         // Start transaction and commit
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -201,10 +200,11 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
             client.subscribe(subscribeParams[1]);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Could not subscribe ", Toast.LENGTH_SHORT).show();
-
+//            Toast.makeText(getApplicationContext(), "Could not subscribe ", Toast.LENGTH_SHORT).show();
+            Log.e("Suscripcion", "Could not subscribe" + subscribeParams[1]);
         }
-        Toast.makeText(getApplicationContext(), "Subscribed to Topic " + subscribeParams[1], Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), "Subscribed to Topic " + subscribeParams[1], Toast.LENGTH_SHORT).show();
+        Log.i("Suscripcion", "Subscribed to Topic" + subscribeParams[1]);
     }
 
 
@@ -251,7 +251,7 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
     // This has to be implemented in order for the subscribe callback to be declared
     // When the message arrives, the GUI is updated, and the data is stored, 5 items max.
     @Override
-    public void messageArrived(String topic, MqttMessage message)
+    public void messageArrived(final String topic, MqttMessage message)
             throws Exception {
 
         // Update local variable for topic and received message
@@ -259,10 +259,10 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
         topicToSubscribe = topic;
 
         // Shift the data in the array containing the received messages
-        for(int i = 4; i >= 1; i--){
-            messages[i] =  messages[i-1];
-        }
-        messages[0] = topic + "/" + message;
+//        for(int i = 4; i >= 1; i--){
+//            messages[i] =  messages[i-1];
+//        }
+//        messages[0] = topic + "/" + message;
 
         // Updating the GUI has to be done in the main Thread, since here we are in a side thread,
         // it is necessary to call runOnUiThread to do so
@@ -272,12 +272,12 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
 
                 try {
                     // Update the GUI only if we are in the Subscribe Fragment, otherwise we cannot reach the Views
-                    if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof MQTTSubscribeFragment ) {
-                        // Call updateList from the MQTTSubscribeFragment to be able to see the Views and variable to update
-                        // TODO: check if the the instance of MQTTSubscribeFragment that was previously created can be used here...
+//                    if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof MQTTSubscribeFragment ) {
+//                        // Call updateList from the MQTTSubscribeFragment to be able to see the Views and variable to update
+//                        // TODO: check if the the instance of MQTTSubscribeFragment that was previously created can be used here...
                         MQTTSubscribeFragment fragment_obj = (MQTTSubscribeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                        fragment_obj.updateList(messages);
-                    }
+                        fragment_obj.updateList(MQTTmessage, topic);
+//                    }
                 } catch (Exception e) {
                     Log.d("Error", "" + e);
                 }
@@ -369,14 +369,14 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
 
                     // Create the message to send and set the Quality of Service
                     // TODO: Rid these debugging prints
-                    System.out.println("Publishing message: " + content);
+                    System.out.println("Publicando mensaje " + content);
                     MqttMessage message = new MqttMessage(content.getBytes());
                     message.setQos(qos);
 
                     try {
                         // Publish the msessage
                         client.publish(topicToPublish, message);
-                        System.out.println("Message published");
+                        System.out.println("Mensaje publicado");
                         // TODO: Rid these debugging prints
                     } catch (MqttException e) {
                         e.printStackTrace();
@@ -404,22 +404,22 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
             if(result != null){
                 switch (result[0]){
                     case "connect":
-                        Log.d("Connect", "just connected");
-                        Toast.makeText(getApplicationContext(), "Connected to " + broker + " on Port " + port, Toast.LENGTH_SHORT).show();
+                        Log.d("Conectado", "solo conectado");
+                        Toast.makeText(getApplicationContext(), "Conectado a " + broker + " en el Puerto " + port, Toast.LENGTH_SHORT).show();
                         break;
 
                     case "publish":
                         Log.d("Publish", "just published");
-                        Toast.makeText(getApplicationContext(), "Published " + content + " on Topic " + topicToPublish, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Publicado " + content + " en el Tópico " + topicToPublish, Toast.LENGTH_SHORT).show();
                         break;
 
                     case "subscribe":
-                        Toast.makeText(getApplicationContext(), "Subscribed " + content+ " to Topic " + topicToPublish, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Suscrito " + content+ " al Tópico " + topicToPublish, Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
             else{
-                Toast.makeText(getApplicationContext(), "Could not perform action, check Connectivity ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "No se pudo realizar la acción, revise la conectividad ", Toast.LENGTH_SHORT).show();
             }
         }
     }
