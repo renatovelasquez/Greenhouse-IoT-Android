@@ -145,9 +145,10 @@ public class MQTTConnectFragment extends Fragment {
         radioNormal         .setOnClickListener(onClickListenerMQTT);
         radioTLS            .setOnClickListener(onClickListenerMQTT);
 
+//        textBroker  .setText("iot.revelsix.com");
         textBroker  .setText("192.168.1.20");
         textPort    .setText("1883");
-        textClient  .setText("Invernadero");
+        textClient  .setText("INVERNADERO IOT");
 
         radioNormal .setChecked(true);
 

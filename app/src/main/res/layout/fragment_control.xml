@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android.support.design:fabSize="mini"
             android:layout_marginLeft="3dp"
-            app:backgroundTint="@color/red"
+            app:backgroundTint="@color/colorAccent2"
             android:src="@drawable/c" />
 
         <android.support.design.widget.FloatingActionButton
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android.support.design:fabSize="mini"
             android:layout_marginLeft="3dp"
-            app:backgroundTint="@color/red"
+            app:backgroundTint="@color/colorAccent2"
             android:src="@drawable/p"/>
 
         <android.support.design.widget.FloatingActionButton
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android.support.design:fabSize="mini"
             android:layout_marginLeft="3dp"
-            app:backgroundTint="@color/red"
+            app:backgroundTint="@color/colorAccent2"
             android:src="@drawable/s" />
     </LinearLayout>
 

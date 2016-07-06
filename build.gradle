@@ -28,6 +28,9 @@ ext {
     compileSdkVersion = 23
     buildToolsVersion = "23.0.3"
 
-    supportLibraryVersion = "23.4.0"
+    spongycastleLibraryVersion = "1.54.0.0"
+    pahoLibraryVersion = "1.0.2"
+    supportLibraryVersion = "24.0.0"
     butterknifeVersion = "8.0.1"
+    androidChartVersion = "v2.2.5"
 }

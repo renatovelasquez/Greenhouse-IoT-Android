@@ -21,13 +21,13 @@ import android.widget.Switch;
  */
 public class MQTTPublishFragment extends Fragment {
 
-    public String valueCooler;
+    public String valueFan;
     public String valueLight;
-    public String valueWater;
+    public String valueIrrigation;
 
-    public Switch swCooler;
+    public Switch swFan;
     public Switch swLight;
-    public Switch swWater;
+    public Switch swIrrigation;
 
     public FloatingActionButton fabConnect;
     public FloatingActionButton fabSubscribe;
@@ -118,13 +118,13 @@ public class MQTTPublishFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_control, container, false);
 
         // Initialise all necessary Views, their values and onClickListener's
-        swCooler = (Switch) rootView.findViewById(R.id.switchCooler);
+        swFan = (Switch) rootView.findViewById(R.id.switchCooler);
         swLight = (Switch) rootView.findViewById(R.id.switchLight);
-        swWater = (Switch) rootView.findViewById(R.id.switchWater);
+        swIrrigation = (Switch) rootView.findViewById(R.id.switchWater);
 
-        swCooler.setOnClickListener(onClickListener);
+        swFan.setOnClickListener(onClickListener);
         swLight.setOnClickListener(onClickListener);
-        swWater.setOnClickListener(onClickListener);
+        swIrrigation.setOnClickListener(onClickListener);
 
         fabConnect = (FloatingActionButton) rootView.findViewById(R.id.fabConnect);
         fabSubscribe = (FloatingActionButton) rootView.findViewById(R.id.fabSubscribe);
@@ -156,15 +156,15 @@ public class MQTTPublishFragment extends Fragment {
             switch(v.getId()){
                 case R.id.switchCooler:
                     //Handle the Button to publish the message
-                    valueCooler = swCooler.isChecked()?"1":"0";
+                    valueFan = swFan.isChecked()?"1":"0";
                     // Bundle the parameters, and call the parent Activity method to start the connection
-                    String paramsCooler[] = {"publish", valueCooler,"cooler","0"};
+                    String paramsCooler[] = {"publish", valueFan,"fan","0"};
                     mCallback.publishMQTTmessage(paramsCooler);
                     break;
 
                 case R.id.switchLight:
                     //Handle the Button to publish the message
-                    valueLight = swCooler.isChecked()?"1":"0";
+                    valueLight = swLight.isChecked()?"1":"0";
                     // Bundle the parameters, and call the parent Activity method to start the connection
                     String paramsLight[] = {"publish", valueLight,"light","0"};
                     mCallback.publishMQTTmessage(paramsLight);
@@ -172,9 +172,9 @@ public class MQTTPublishFragment extends Fragment {
 
                 case R.id.switchWater:
                     //Handle the Button to publish the message
-                    valueWater = swCooler.isChecked()?"1":"0";
+                    valueIrrigation = swIrrigation.isChecked()?"1":"0";
                     // Bundle the parameters, and call the parent Activity method to start the connection
-                    String paramsWater[] = {"publish", valueWater,"water","0"};
+                    String paramsWater[] = {"publish", valueIrrigation,"irrigation","0"};
                     mCallback.publishMQTTmessage(paramsWater);
                     break;
             }

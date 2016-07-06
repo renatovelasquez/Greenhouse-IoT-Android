@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,6 +32,10 @@ public class MQTTSubscribeFragment extends Fragment {
     public TextView txtValueSoil;
     public TextView txtValueMois;
 
+    public CardView cardTemp;
+    public CardView cardSoil;
+    public CardView cardMois;
+
     public MQTTSubscribeFragment() {
         // Required empty public constructor
     }
@@ -38,9 +43,8 @@ public class MQTTSubscribeFragment extends Fragment {
     // Interface of the functions from the parent Activity that this Fragment will call
     public interface SubscribeDataPassListener {
         void launchPublishFragment(String data);
-
         void launchConnectFragment(String data);
-
+//        void launchChartFragment(String data);
         void subscribeMQTTtopic(String messageParams[]);
     }
 
@@ -128,6 +132,14 @@ public class MQTTSubscribeFragment extends Fragment {
         fabConnect.setOnClickListener(onClickListenerMQTT);
         fabLaunchPublish.setOnClickListener(onClickListenerMQTT);
 
+        cardTemp = (CardView) rootView.findViewById(R.id.card_view_temp);
+        cardSoil = (CardView) rootView.findViewById(R.id.card_view_soil);
+        cardMois = (CardView) rootView.findViewById(R.id.card_view_mois);
+
+//        cardTemp.setOnClickListener(onClickListener);
+//        cardSoil.setOnClickListener(onClickListener);
+//        cardMois.setOnClickListener(onClickListener);
+
         return rootView;
     }
 
@@ -158,11 +170,11 @@ public class MQTTSubscribeFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String paramsTemperature[] = {"subscribe", "1"};
+        String paramsTemperature[] = {"subscribe", "temperatura"};
         mCallback.subscribeMQTTtopic(paramsTemperature);
-        String paramsSoil[] = {"subscribe", "2"};
+        String paramsSoil[] = {"subscribe", "humedad"};
         mCallback.subscribeMQTTtopic(paramsSoil);
-        String paramsSoilMoisture[] = {"subscribe", "3"};
+        String paramsSoilMoisture[] = {"subscribe", "humedad_suelo"};
         mCallback.subscribeMQTTtopic(paramsSoilMoisture);
 
         temperature.setIdSensor(1);
@@ -198,28 +210,45 @@ public class MQTTSubscribeFragment extends Fragment {
         }
     };
 
+//    private View.OnClickListener onClickListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(final View v) {
+//            switch (v.getId()) {
+//                case R.id.card_view_temp:
+//                    //            //// Change to the Publish fragment, through the parent Activity interface
+//                    mCallback.launchChartFragment("");
+//                    break;
+//            }
+//        }
+//    };
+
     // This method is called from the parent Activity and it has to run in the UI thread, to update
     // the itesm in the ListView
     public void updateList(String message, String topic) {
         // Bind the adapter to the List View
         Log.i(topic, message);
-        switch (topic) {
-
-            case "1":
-                //// Change to the Publish fragment, through the parent Activity interface
-                Log.i("Temperatura", message);
-                txtValueTemp.setText(message+"°C");
-                break;
-            case "2":
-                //// Change to the Publish fragment, through the parent Activity interface
-                Log.i("Humedad", message);
-                txtValueSoil.setText(message+"%");
-                break;
-            case "3":
-                //// Change to the Publish fragment, through the parent Activity interface
-                Log.i("Humedad Suelo", message);
-                txtValueMois.setText(message+"%");
-                break;
-        }
+        if(topic.equals("temperatura"))
+            txtValueTemp.setText(message+"°C");
+        if(topic.equals("humedad"))
+            txtValueSoil.setText(message+"%");
+        if(topic.equals("humedad_suelo"))
+            txtValueMois.setText(message+"%");
+//        switch (topic) {
+//            case "1":
+//                //// Change to the Publish fragment, through the parent Activity interface
+//                Log.i("Temperatura", message);
+//                txtValueTemp.setText(message+"°C");
+//                break;
+//            case "2":
+//                //// Change to the Publish fragment, through the parent Activity interface
+//                Log.i("Humedad", message);
+//                txtValueSoil.setText(message+"%");
+//                break;
+//            case "3":
+//                //// Change to the Publish fragment, through the parent Activity interface
+//                Log.i("Humedad Suelo", message);
+//                txtValueMois.setText(message+"%");
+//                break;
+//        }
     }
 }

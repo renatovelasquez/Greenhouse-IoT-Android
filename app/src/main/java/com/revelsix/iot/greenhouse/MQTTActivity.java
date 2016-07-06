@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.revelsix.iot.greenhouse.MQTTConnectFragment.ConnectDataPassListener;
 import com.revelsix.iot.greenhouse.MQTTPublishFragment.PublishDataPassListener;
 import com.revelsix.iot.greenhouse.MQTTSubscribeFragment.SubscribeDataPassListener;
+//import com.revelsix.iot.greenhouse.MQTTChartFragment.ChartDataPassListener;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -48,11 +49,12 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
     public MqttClient               client;
     public MqttConnectOptions       options;
 
-    public MQTTConnectFragment      connectFragment;
-    public MQTTSubscribeFragment    subscribeFragment;
-    public MQTTPublishFragment      publishFragment;
+    public MQTTConnectFragment connectFragment;
+    public MQTTSubscribeFragment subscribeFragment;
+    public MQTTPublishFragment publishFragment;
+//    public MQTTChartFragment chartFragment;
 
-    public Uri                      pathUri;
+    public Uri pathUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +173,22 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
         fragmentTransaction.commit();
     }
 
+    // Interface to launch an MQTTSubscribeFragment fragment
+//    public void launchChartFragment(String data) {
+//        // Set the title in the toolbar
+//        setTitle(getString(R.string.title_activity_detail));
+//        // Create instance of MQTTSubscribeFragment
+//        chartFragment = new MQTTChartFragment();
+////        Bundle args = new Bundle();
+////        // Pass information from the variables in the activity to the fragment
+////        args.putString("topic", topicToSubscribe);
+////        args.putStringArray("messages", messages);
+////        subscribeFragment.setArguments(args);
+//        // Start transaction and commit
+//        fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.fragment_container, chartFragment);
+//        fragmentTransaction.commit();
+//    }
 
     // Interface to call the construction of MQTT client from fragments.
     public void createMQTTClient(String connectParams[]){
@@ -204,7 +222,7 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
             Log.e("Suscripcion", "Could not subscribe" + subscribeParams[1]);
         }
 //        Toast.makeText(getApplicationContext(), "Subscribed to Topic " + subscribeParams[1], Toast.LENGTH_SHORT).show();
-        Log.i("Suscripcion", "Subscribed to Topic" + subscribeParams[1]);
+        Log.i("Suscripcion", "Topico(" + subscribeParams[1]+")");
     }
 
 
@@ -225,19 +243,19 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
 
 
     // This method is called after the startActivityForResult method is invoked.
-     @Override
-     public  void onActivityResult(int requestCode, int resultCode, Intent data) {
-         // TODO Fix no activity available
-         if (data == null)
-             return;
-         switch (requestCode) {
-             case PICKFILE_RESULT_CODE:
-                 if (resultCode == RESULT_OK) {
-                     // The data intent returns an URI with getData
-                     pathUri = data.getData();
-                 }
-         }
-     }
+    @Override
+    public  void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Fix no activity available
+        if (data == null)
+            return;
+        switch (requestCode) {
+            case PICKFILE_RESULT_CODE:
+                if (resultCode == RESULT_OK) {
+                    // The data intent returns an URI with getData
+                    pathUri = data.getData();
+                }
+        }
+    }
 
 
     // This has to be implemented in order for the subscribe callback to be declared
@@ -275,8 +293,10 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
 //                    if(getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof MQTTSubscribeFragment ) {
 //                        // Call updateList from the MQTTSubscribeFragment to be able to see the Views and variable to update
 //                        // TODO: check if the the instance of MQTTSubscribeFragment that was previously created can be used here...
-                        MQTTSubscribeFragment fragment_obj = (MQTTSubscribeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-                        fragment_obj.updateList(MQTTmessage, topic);
+                    MQTTSubscribeFragment fragment_obj = (MQTTSubscribeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                    fragment_obj.updateList(MQTTmessage, topic);
+//                    MQTTChartFragment fragmentChart = (MQTTChartFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//                    fragmentChart.updateList(MQTTmessage, topic);
 //                    }
                 } catch (Exception e) {
                     Log.d("Error", "" + e);
@@ -322,8 +342,11 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
                         client  = new MqttClient(brokerURI, clientId, persistence);
                         options = new MqttConnectOptions();
                         options.setCleanSession(true);
-                        options.setConnectionTimeout(60);
-                        options.setKeepAliveInterval(60);
+//                        options.setConnectionTimeout(60);
+//                        options.setKeepAliveInterval(60);
+                        options.setUserName("root");
+                        char [] srcArray = {'r', 'o', 'o', 't'};
+                        options.setPassword(srcArray);
 
 
                         if(paramString[5] == "tcp"){
@@ -409,12 +432,13 @@ public class MQTTActivity extends AppCompatActivity implements ConnectDataPassLi
                         break;
 
                     case "publish":
-                        Log.d("Publish", "just published");
-                        Toast.makeText(getApplicationContext(), "Publicado " + content + " en el Tópico " + topicToPublish, Toast.LENGTH_SHORT).show();
+                        Log.d("Publish", "publicado");
+//                        Toast.makeText(getApplicationContext(), "Publicado " + content + " en el Tópico " + topicToPublish, Toast.LENGTH_SHORT).show();
                         break;
 
                     case "subscribe":
-                        Toast.makeText(getApplicationContext(), "Suscrito " + content+ " al Tópico " + topicToPublish, Toast.LENGTH_SHORT).show();
+                        Log.d("Subscribe", "suscrito");
+//                        Toast.makeText(getApplicationContext(), "Suscrito " + content+ " al Tópico " + topicToPublish, Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
