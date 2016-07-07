@@ -2,10 +2,15 @@ package com.revelsix.iot.greenhouse;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +40,7 @@ public class MQTTSubscribeFragment extends Fragment {
     public CardView cardTemp;
     public CardView cardSoil;
     public CardView cardMois;
+    public static final int NOTIFICATION_ID=1;
 
     public MQTTSubscribeFragment() {
         // Required empty public constructor
@@ -44,7 +50,7 @@ public class MQTTSubscribeFragment extends Fragment {
     public interface SubscribeDataPassListener {
         void launchPublishFragment(String data);
         void launchConnectFragment(String data);
-//        void launchChartFragment(String data);
+        //        void launchChartFragment(String data);
         void subscribeMQTTtopic(String messageParams[]);
     }
 
@@ -227,12 +233,19 @@ public class MQTTSubscribeFragment extends Fragment {
     public void updateList(String message, String topic) {
         // Bind the adapter to the List View
         Log.i(topic, message);
-        if(topic.equals("temperatura"))
-            txtValueTemp.setText(message+"°C");
-        if(topic.equals("humedad"))
+        if(topic.equals("temperatura")) {
+            txtValueTemp.setText(message + "°C");
+            return;
+        }
+        if(topic.equals("humedad")){
             txtValueSoil.setText(message+"%");
-        if(topic.equals("humedad_suelo"))
-            txtValueMois.setText(message+"%");
+            return;
+        }
+        if(topic.equals("humedad_suelo")) {
+            txtValueMois.setText(message + "%");
+            if(message!=null && Integer.valueOf(message)<=22)
+                showNotification(getView());
+        }
 //        switch (topic) {
 //            case "1":
 //                //// Change to the Publish fragment, through the parent Activity interface
@@ -250,5 +263,25 @@ public class MQTTSubscribeFragment extends Fragment {
 //                txtValueMois.setText(message+"%");
 //                break;
 //        }
+    }
+    public void showNotification(View view){
+        //Construccion de la accion del intent implicito
+//        Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse("http://developer.android.com/index.html"));
+//        PendingIntent pendingIntent=PendingIntent.getActivity(getContext(),0,intent,0);
+        //Construccion de la notificacion;
+        NotificationCompat.Builder builder= new NotificationCompat.Builder(getContext());
+        builder.setSmallIcon(R.drawable.planta);
+//        builder.setContentIntent(pendingIntent);
+        Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        System.out.println(sound);
+        builder.setSound(sound);
+        builder.setAutoCancel(true);
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.soil_moisture));
+        builder.setContentTitle("Humedad del suelo");
+        builder.setContentText("Por debajo del nivel aceptable");
+        builder.setSubText("Revise la humedad en el suelo y tome la acción respectiva.");
+        //Enviar la notificacion
+        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(getContext().NOTIFICATION_SERVICE);
+        notificationManager.notify(NOTIFICATION_ID,builder.build());
     }
 }

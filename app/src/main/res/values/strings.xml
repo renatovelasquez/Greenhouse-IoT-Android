@@ -13,9 +13,9 @@
     <string name="description">La aplicación \"Greenhouse IoT\", permite una experiencia simple para el control y monitoreo de un invernadero.\n\nEsta aplicación fue desarrollada como apoyo al prototipo del trabajo de investigación titulado \"Diseño de un sistema embebido para el control de un invernadero\" realizada por Renato Velasquez Luis.
     </string>
     <string name="aboutText">
-        Greenhouse IoT v.1.0\n
+        Greenhouse IoT (Beta)\n
         por @RenatoVelasquez\n
         velasquez.ren@gmail.com\n
-        Junio 2016
+        Julio 2016
     </string>
 </resources>

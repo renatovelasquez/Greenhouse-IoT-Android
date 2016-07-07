@@ -58,7 +58,6 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="end|bottom"
         android:src="@drawable/arrow"
-
         />
 
 </android.support.design.widget.CoordinatorLayout>
